@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 author 'Sunucu Team'
-description 'EMS Job System'
+description 'Police Job System'
 version '1.0.0'
 
 shared_scripts {
