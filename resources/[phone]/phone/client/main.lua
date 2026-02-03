@@ -92,6 +92,21 @@ AddEventHandler('phone:notification', function(icon, message)
     })
 end)
 
+RegisterNetEvent('phone:updateFeed')
+AddEventHandler('phone:updateFeed', function(feed)
+    SendNuiMessage(json.encode({ type = "updateFeed", feed = feed }))
+end)
+
+RegisterNetEvent('phone:receiveLocation')
+AddEventHandler('phone:receiveLocation', function(info)
+    SendNuiMessage(json.encode({ type = "receiveLocation", from = info.from, coords = info.coords }))
+end)
+
+RegisterNetEvent('marketplace:updateListings')
+AddEventHandler('marketplace:updateListings', function(listings)
+    SendNuiMessage(json.encode({ type = 'updateMarket', listings = listings }))
+end)
+
 -- NUI Callback
 RegisterNuiCallback('phoneAction', function(data, cb)
     if data.action == "close" then
@@ -108,9 +123,29 @@ RegisterNuiCallback('phoneAction', function(data, cb)
         TriggerServerEvent('phone:makeCall', data.number)
     elseif data.action == 'transferToIban' then
         TriggerServerEvent('bank:transferToIban', data.iban, data.amount)
+    elseif data.action == 'postTweet' then
+        TriggerServerEvent('phone:postTweet', data.content)
+    elseif data.action == 'getFeed' then
+        TriggerServerEvent('phone:getFeed')
+    elseif data.action == 'shareLocation' then
+        local ped = PlayerPedId()
+        local x,y,z = table.unpack(GetEntityCoords(ped))
+        TriggerServerEvent('phone:sendLocation', data.number, { x = x, y = y, z = z })
+    elseif data.action == 'createListing' then
+        TriggerServerEvent('marketplace:createListing', data.title, data.description, data.price)
+    elseif data.action == 'getListings' then
+        TriggerServerEvent('marketplace:getListings')
+    elseif data.action == 'buyListing' then
+        TriggerServerEvent('marketplace:buyListing', data.id)
+    elseif data.action == 'removeListing' then
+        TriggerServerEvent('marketplace:removeListing', data.id)
+    elseif data.action == 'promoteListing' then
+        TriggerServerEvent('marketplace:promoteListing', data.id, data.fee)
     end
     cb('ok')
 end)
+
+-- ESC tuşu ile telefonu kapat
 
 -- ESC tuşu ile telefonu kapat
 Citizen.CreateThread(function()
