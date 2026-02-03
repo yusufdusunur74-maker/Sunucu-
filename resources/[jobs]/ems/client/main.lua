@@ -48,6 +48,31 @@ RegisterCommand('revive', function(source, args, raw)
     TriggerServerEvent('ems:revivePlayer', targetId)
 end, false)
 
+-- carry / drop / treat commands
+RegisterCommand('carry', function(source, args)
+    if #args < 1 then
+        TriggerEvent('chat:addMessage', { args = {'EMS', 'Kullanım: /carry <playerId>'} })
+        return
+    end
+    TriggerServerEvent('ems:carry', tonumber(args[1]))
+end, false)
+
+RegisterCommand('drop', function(source, args)
+    if #args < 1 then
+        TriggerEvent('chat:addMessage', { args = {'EMS', 'Kullanım: /drop <playerId>'} })
+        return
+    end
+    TriggerServerEvent('ems:drop', tonumber(args[1]))
+end, false)
+
+RegisterCommand('treat', function(source, args)
+    if #args < 2 then
+        TriggerEvent('chat:addMessage', { args = {'EMS', 'Kullanım: /treat <playerId> <amount>'} })
+        return
+    end
+    TriggerServerEvent('ems:treat', tonumber(args[1]), tonumber(args[2]))
+end, false)
+
 RegisterNetEvent('ems:respawnPlayer')
 AddEventHandler('ems:respawnPlayer', function()
     -- hastane konumlarından birinde spawn ol
@@ -60,6 +85,39 @@ AddEventHandler('ems:respawnPlayer', function()
     TriggerEvent('chat:addMessage', {
         args = {'EMS', 'Hastanede uyandınız. Sağlıkla kalınız!'}
     })
+end)
+
+-- carry handlers
+RegisterNetEvent('ems:beCarried')
+AddEventHandler('ems:beCarried', function(carrierSrc)
+    TriggerEvent('chat:addMessage', { args = {'EMS', 'EMS sizi sedyeye aldı. Taşınıyorsunuz...'} })
+    -- basit: freeze while being carried
+    local ped = PlayerPedId()
+    FreezeEntityPosition(ped, true)
+end)
+
+RegisterNetEvent('ems:stopCarry')
+AddEventHandler('ems:stopCarry', function()
+    TriggerEvent('chat:addMessage', { args = {'EMS', 'Sedyeden indirildiniz.'} })
+    local ped = PlayerPedId()
+    FreezeEntityPosition(ped, false)
+end)
+
+RegisterNetEvent('ems:carryStarted')
+AddEventHandler('ems:carryStarted', function(targetId)
+    TriggerEvent('chat:addMessage', { args = {'EMS', ('Sedyede oyuncu %s ile taşımaya başladınız.'):format(tostring(targetId))} })
+end)
+
+RegisterNetEvent('ems:carryStopped')
+AddEventHandler('ems:carryStopped', function(targetId)
+    TriggerEvent('chat:addMessage', { args = {'EMS', ('Sedyeyi bıraktınız: %s'):format(tostring(targetId))} })
+end)
+
+RegisterNetEvent('ems:receiveTreatment')
+AddEventHandler('ems:receiveTreatment', function(amount)
+    TriggerEvent('chat:addMessage', { args = {'EMS', ('Tedavi uygulandı. $%s ödendi ve sağlık geri verildi.'):format(tostring(amount))} })
+    local ped = PlayerPedId()
+    SetEntityHealth(ped, 200)
 end)
 
 print("^5[EMS]^7 Client yüklendi")
