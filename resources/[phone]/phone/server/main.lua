@@ -82,6 +82,28 @@ AddEventHandler('phone:sendSMS', function(targetNumber, message)
     print(("^2[SMS]^7 %s -> %s: %s"):format(senderNumber, targetNumber, message))
 end)
 
+
+-- Arama başlatma (basit notify)
+RegisterNetEvent('phone:makeCall')
+AddEventHandler('phone:makeCall', function(targetNumber)
+    local src = source
+    if not PlayerPhones[src] then return end
+    local senderNumber = PlayerPhones[src].phoneNumber
+
+    for targetSrc, phoneData in pairs(PlayerPhones) do
+        if phoneData.phoneNumber == targetNumber then
+            -- Bildirim at
+            TriggerClientEvent('phone:notification', targetSrc, '📞', senderNumber .. ' sizi arıyor')
+            TriggerClientEvent('phone:notification', src, '📞', 'Arama başlatıldı: ' .. targetNumber)
+            print(('^2[Telefon]^7 %s arıyor %s'):format(senderNumber, targetNumber))
+            return
+        end
+    end
+
+    -- bulunamadı
+    TriggerClientEvent('phone:notification', src, '📞', 'Aranan numara çevrimdışı veya bulunamadı')
+end)
+
 -- Mesajları Getir
 RegisterNetEvent('phone:getMessages')
 AddEventHandler('phone:getMessages', function()

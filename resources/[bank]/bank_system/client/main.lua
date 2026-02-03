@@ -50,6 +50,15 @@ AddEventHandler('bank:notification', function(title, message)
     })
 end)
 
+RegisterNetEvent('bank:receiveIban')
+AddEventHandler('bank:receiveIban', function(iban)
+    TriggerEvent('chat:addMessage', { args = { 'BANKA', 'IBAN: ' .. tostring(iban) } })
+end)
+
+RegisterCommand('iban', function()
+    TriggerServerEvent('bank:getIban')
+end, false)
+
 -- Banka Lokasyonlarında Kontrol
 Citizen.CreateThread(function()
     local BankConfig = {

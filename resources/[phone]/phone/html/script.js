@@ -4,13 +4,49 @@ let currentPage = 'menu';
 
 window.addEventListener('message', function(event) {
     let item = event.data;
-    
+    if (!item || !item.type) return;
+
     if (item.type === "openPhone") {
-        phoneData = item.data;
-        updatePhoneUI();
         document.getElementById('phone-container').classList.remove('phone-hidden');
         currentPage = 'menu';
         showPage('menu');
+        return;
+    }
+
+    if (item.type === 'updatePhone') {
+        phoneData = phoneData || {};
+        phoneData.phone = phoneData.phone || {};
+        phoneData.phone.number = item.phoneNumber;
+        phoneData.phone.bankAccount = item.bankAccount;
+        phoneData.contacts = item.contacts || [];
+        phoneData.messages = item.messages || [];
+        updatePhoneUI();
+        return;
+    }
+
+    if (item.type === 'updateContacts') {
+        phoneData.contacts = item.contacts || [];
+        if (currentPage === 'contacts') updateContacts();
+        return;
+    }
+
+    if (item.type === 'updateMessages') {
+        phoneData.messages = item.messages || [];
+        if (currentPage === 'messages') updateMessages();
+        return;
+    }
+
+    if (item.type === 'updateMoneyInfo') {
+        phoneData.phone = phoneData.phone || {};
+        phoneData.phone.balance = item.phoneBalance || (phoneData.phone.balance || 0);
+        // Bank info display
+        document.getElementById('bank-balance').innerText = '$' + (item.bank || 0);
+        return;
+    }
+
+    if (item.type === 'notification') {
+        alert(item.message || 'Bildirim');
+        return;
     }
 });
 
@@ -77,10 +113,10 @@ function updateAccount() {
     }
     
     // Banka bakiyesini Al - Server'dan Get
-    fetch(`https://${GetParentResourceName()}/phone:getMoneyInfo`, {
+    fetch(`https://${GetParentResourceName()}/phoneAction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
+        body: JSON.stringify({ action: 'checkBalance' })
     });
 }
 
@@ -93,40 +129,41 @@ function sendSMS() {
     const message = document.getElementById('sms-text').value;
     
     if (number && message) {
-        fetch(`https://${GetParentResourceName()}/phone:sendSMS`, {
+        fetch(`https://${GetParentResourceName()}/phoneAction`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                number: number,
-                message: message
-            })
+            body: JSON.stringify({ action: 'sendSMS', number: number, message: message })
         });
-        
         document.getElementById('sms-number').value = '';
         document.getElementById('sms-text').value = '';
     }
 }
 
 function callContact(number, name) {
-    console.log('Calling: ' + name + ' (' + number + ')');
+    fetch(`https://${GetParentResourceName()}/phoneAction`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'call', number: number })
+    });
 }
 
 function topupBalance() {
     const amount = prompt('Bakiye Yükle (TL):', '100');
     if (amount) {
-        fetch(`https://${GetParentResourceName()}/phone:addBalance`, {
+        fetch(`https://${GetParentResourceName()}/phoneAction`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amount: parseInt(amount) })
+            body: JSON.stringify({ action: 'addBalance', amount: parseInt(amount) })
         });
     }
 }
 
 function closePhone() {
     document.getElementById('phone-container').classList.add('phone-hidden');
-    fetch(`https://${GetParentResourceName()}/closePhone`, {
+    fetch(`https://${GetParentResourceName()}/phoneAction`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'close' })
     });
 }
 

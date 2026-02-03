@@ -82,6 +82,25 @@ AddEventHandler('money:transfer', function(targetId, amount)
     end
 end)
 
+-- Banka transferi (hesaplar arasi)
+RegisterNetEvent('money:transferBank')
+AddEventHandler('money:transferBank', function(targetId, amount)
+    local src = source
+    if not Players[src] or not Players[targetId] then return end
+
+    amount = tonumber(amount) or 0
+    if amount > 0 and Players[src].bank >= amount then
+        Players[src].bank = Players[src].bank - amount
+        Players[targetId].bank = Players[targetId].bank + amount
+
+        TriggerClientEvent('money:updateMoney', src, Players[src].cash, Players[src].bank)
+        TriggerClientEvent('money:updateMoney', targetId, Players[targetId].cash, Players[targetId].bank)
+
+        TriggerEvent('money:log', src, "BANK_TRANSFER", "Oyuncu ID: " .. targetId, amount, Players[src].bank)
+        TriggerEvent('money:log', targetId, "BANK_TRANSFER", "Oyuncu ID: " .. src, amount, Players[targetId].bank)
+    end
+end)
+
 -- Banka Para Çıkarma (TELEFON İÇİN)
 RegisterNetEvent('money:removeBank')
 AddEventHandler('money:removeBank', function(amount, callback)

@@ -1,3 +1,5 @@
+body { font-family: sans-serif; background: transparent; color: #fff }
+#app { padding: 12px }
 .inventory-container {
     position: fixed;
     right: 20px;

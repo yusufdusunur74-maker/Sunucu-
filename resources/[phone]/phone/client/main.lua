@@ -13,10 +13,10 @@ end)
 function OpenPhone()
     phoneOpen = true
     TriggerServerEvent('phone:initialize')
-    
-    -- Para bilgilerini al (HESABIMA YUKLE - BANKADAN VER)
-    TriggerServerEvent('phone:getMoneyInfo')
-    
+
+    -- Para bilgilerini al (money sistemi doğrudan sunucuya istek atılıyor)
+    TriggerServerEvent('money:getMoney')
+
     -- Biraz bekle ve UI aç
     Wait(100)
     SendNuiMessage(json.encode({type = "openPhone"}))
@@ -57,7 +57,9 @@ end)
 -- Mesajları Güncelle
 RegisterNetEvent('phone:updateMessages')
 AddEventHandler('phone:updateMessages', function(messages)
-   Para Bilgisi Güncellemesi (HESABIMA YUKLE)
+    SendNuiMessage(json.encode({ type = 'updateMessages', messages = messages }))
+end)
+
 RegisterNetEvent('phone:updateMoneyInfo')
 AddEventHandler('phone:updateMoneyInfo', function(moneyInfo)
     SendNuiMessage(json.encode({
@@ -66,14 +68,13 @@ AddEventHandler('phone:updateMoneyInfo', function(moneyInfo)
         bank = moneyInfo.bank,
         phoneBalance = moneyInfo.phoneBalance
     }))
-    
     print(("^2[Telefon]^7 Hesap: $%d | Nakit: $%d | Telefon Bakiyesi: $%d"):format(moneyInfo.bank, moneyInfo.cash, moneyInfo.phoneBalance))
 end)
 
---  SendNuiMessage(json.encode({
-        type = "updateMessages",
-        messages = messages
-    }))
+-- money:updateMoney eventten gelen veriyi phone NUI'ye gönder
+RegisterNetEvent('money:updateMoney')
+AddEventHandler('money:updateMoney', function(cash, bank)
+    SendNuiMessage(json.encode({ type = 'updateMoneyInfo', cash = cash, bank = bank, phoneBalance = (playerPhone and playerPhone.balance) or 0 }))
 end)
 
 -- Bildirim
@@ -102,7 +103,11 @@ RegisterNuiCallback('phoneAction', function(data, cb)
     elseif data.action == "getMessages" then
         TriggerServerEvent('phone:getMessages')
     elseif data.action == "checkBalance" then
-        TriggerServerEvent('phone:updateBalance')
+        TriggerServerEvent('money:getMoney')
+    elseif data.action == 'call' then
+        TriggerServerEvent('phone:makeCall', data.number)
+    elseif data.action == 'transferToIban' then
+        TriggerServerEvent('bank:transferToIban', data.iban, data.amount)
     end
     cb('ok')
 end)
