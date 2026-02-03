@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Envanter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="inventory-menu" class="inventory-container" style="display: none;">
+        <div class="inventory-header">
+            <h1>📦 ENVANTER</h1>
+            <button class="close-btn" onclick="closeInventory()">✕</button>
+        </div>
+
+        <div class="inventory-content">
+            <div class="items-grid" id="items">
+                <p>Envanter boş</p>
+            </div>
+
+            <div class="inventory-info">
+                <p><strong>Ağırlık:</strong> <span id="weight">0</span>/<span id="maxWeight">50</span> kg</p>
+                <div class="progress-bar">
+                    <div id="weightBar" class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

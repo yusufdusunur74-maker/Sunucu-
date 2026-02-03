@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Banka Sistemi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="bank-menu" class="bank-menu" style="display: none;">
+        <div class="bank-container">
+            <h1>MERKEZ BANKA</h1>
+            <div class="bank-sections">
+                <button class="bank-btn" onclick="openDeposit()">Para Yatır</button>
+                <button class="bank-btn" onclick="openWithdraw()">Para Çek</button>
+                <button class="bank-btn" onclick="openTransfer()">Para Transfer</button>
+                <button class="bank-btn close-btn" onclick="closeBank()">Çık</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deposit-menu" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Para Yatırma</h2>
+            <input type="number" id="deposit-amount" placeholder="Miktar girin">
+            <button onclick="confirmDeposit()">Yatır</button>
+            <button onclick="closeModal()">İptal</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

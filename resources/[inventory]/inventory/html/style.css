@@ -1,0 +1,105 @@
+.inventory-container {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    width: 350px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 3px solid #4a90e2;
+    border-radius: 10px;
+    z-index: 999;
+    font-family: Arial, sans-serif;
+}
+
+.inventory-header {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    padding: 15px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #2a5aa0;
+}
+
+.inventory-header h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.close-btn {
+    background: #cc0000;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.close-btn:hover {
+    background: #ff0000;
+}
+
+.inventory-content {
+    padding: 15px;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.item {
+    background: #222;
+    border: 2px solid #4a90e2;
+    padding: 10px;
+    border-radius: 5px;
+    color: #00ff00;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.item:hover {
+    background: #333;
+    border-color: #6ab3ff;
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+}
+
+.item h4 {
+    margin: 0 0 5px 0;
+    color: #4a90e2;
+}
+
+.item p {
+    margin: 0;
+    font-size: 12px;
+}
+
+.inventory-info {
+    background: #1a1a1a;
+    border: 1px solid #4a90e2;
+    padding: 10px;
+    border-radius: 5px;
+    color: #00ff00;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #000;
+    border: 1px solid #4a90e2;
+    border-radius: 3px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff00 0%, #ffaa00 50%, #ff0000 100%);
+    width: 0%;
+    transition: width 0.3s;
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Telefon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="phone-container" class="phone-hidden">
+        <div class="phone-screen">
+            <!-- Başlık -->
+            <div class="phone-header">
+                <span class="phone-time">10:24</span>
+                <span class="phone-carrier">TurkCell</span>
+                <span class="phone-battery">🔋</span>
+            </div>
+            
+            <!-- Ana Menü -->
+            <div id="phone-menu" class="phone-content">
+                <div class="menu-item" onclick="showPage('contacts')">
+                    <span class="icon">👥</span>
+                    <span>Rehber</span>
+                </div>
+                <div class="menu-item" onclick="showPage('messages')">
+                    <span class="icon">💬</span>
+                    <span>Mesajlar</span>
+                </div>
+                <div class="menu-item" onclick="showPage('account')">
+                    <span class="icon">💰</span>
+                    <span>Hesap</span>
+                </div>
+                <div class="menu-item" onclick="showPage('calls')">
+                    <span class="icon">☎️</span>
+                    <span>Aramalar</span>
+                </div>
+            </div>
+            
+            <!-- Rehber Sayfası -->
+            <div id="contacts-page" class="phone-content hidden">
+                <div class="page-header">
+                    <button onclick="showPage('menu')">←</button>
+                    <span>Rehber</span>
+                    <button onclick="closePhone()">X</button>
+                </div>
+                <div id="contacts-list" class="contacts-list">
+                    <!-- Dinamik olarak dolacak -->
+                </div>
+            </div>
+            
+            <!-- Mesajlar Sayfası -->
+            <div id="messages-page" class="phone-content hidden">
+                <div class="page-header">
+                    <button onclick="showPage('menu')">←</button>
+                    <span>Mesajlar</span>
+                    <button onclick="closePhone()">X</button>
+                </div>
+                <div id="messages-list" class="messages-list">
+                    <!-- Dinamik olarak dolacak -->
+                </div>
+                <div class="send-message">
+                    <input id="sms-number" type="text" placeholder="Numara">
+                    <textarea id="sms-text" placeholder="Mesaj"></textarea>
+                    <button onclick="sendSMS()">Gönder</button>
+                </div>
+            </div>
+            
+            <!-- Hesap Sayfası (BANKAYı GÖSTER) -->
+            <div id="account-page" class="phone-content hidden">
+                <div class="page-header">
+                    <button onclick="showPage('menu')">←</button>
+                    <span>Hesap</span>
+                    <button onclick="closePhone()">X</button>
+                </div>
+                <div class="account-info">
+                    <div class="info-item">
+                        <span class="label">Telefon Numarası:</span>
+                        <span class="value" id="phone-number">555-0000</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Telefon Bakiyesi:</span>
+                        <span class="value" id="phone-balance">$0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">HESAP BAKİYESİ (BANKA):</span>
+                        <span class="value" id="bank-balance">$0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">NAKİT:</span>
+                        <span class="value" id="cash-balance">$0</span>
+                    </div>
+                    <button onclick="topupBalance()" class="topup-btn">Bakiye Yükle</button>
+                </div>
+            </div>
+            
+            <!-- Aramalar Sayfası -->
+            <div id="calls-page" class="phone-content hidden">
+                <div class="page-header">
+                    <button onclick="showPage('menu')">←</button>
+                    <span>Aramalar</span>
+                    <button onclick="closePhone()">X</button>
+                </div>
+                <div id="calls-list" class="calls-list">
+                    <p style="text-align: center; color: #999;">Arama geçmişi boş</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

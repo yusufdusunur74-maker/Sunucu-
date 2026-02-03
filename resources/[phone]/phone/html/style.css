@@ -1,0 +1,320 @@
+/* Telefon CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000;
+    font-family: Arial, sans-serif;
+}
+
+#phone-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    height: 600px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 30px;
+    border: 3px solid #333;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+}
+
+.phone-hidden {
+    display: none !important;
+}
+
+.phone-screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #f5f5f5;
+}
+
+.phone-header {
+    background: #000;
+    color: #fff;
+    padding: 8px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    border-bottom: 1px solid #333;
+}
+
+.phone-time {
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+}
+
+.phone-carrier {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+}
+
+.phone-battery {
+    flex: 1;
+    text-align: right;
+}
+
+.phone-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background: #f5f5f5;
+}
+
+.phone-content.hidden {
+    display: none !important;
+}
+
+/* Ana Menü */
+.menu-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s;
+}
+
+.menu-item:hover {
+    background: #e8f5e9;
+    border-color: #4CAF50;
+    transform: translateX(5px);
+}
+
+.menu-item .icon {
+    font-size: 24px;
+}
+
+.menu-item span:last-child {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Sayfa Başlığı */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.page-header button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.page-header button:hover {
+    background: #45a049;
+}
+
+.page-header span {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Rehber Listesi */
+.contacts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.contact-item:hover {
+    background: #e8f5e9;
+    border-color: #4CAF50;
+}
+
+.contact-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.contact-number {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Mesajlar */
+.messages-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.message-item {
+    background: #e3f2fd;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 8px 0;
+}
+
+.message-from {
+    font-size: 12px;
+    color: #666;
+    font-weight: bold;
+}
+
+.message-text {
+    color: #333;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.send-message {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.send-message input,
+.send-message textarea {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+}
+
+.send-message textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.send-message button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.send-message button:hover {
+    background: #45a049;
+}
+
+/* Hesap Bilgisi */
+.account-info {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-item:last-of-type {
+    border-bottom: none;
+}
+
+.info-item .label {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+.info-item .value {
+    color: #4CAF50;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.topup-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+}
+
+.topup-btn:hover {
+    background: #45a049;
+}
+
+/* Aramalar */
+.calls-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.call-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.call-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.call-time {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Scroll */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #45a049;
+}

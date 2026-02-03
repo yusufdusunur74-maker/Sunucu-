@@ -1,0 +1,105 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.bank-menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 10px;
+    padding: 30px;
+    width: 400px;
+    box-shadow: 0 0 30px rgba(42, 82, 152, 0.8);
+    z-index: 1000;
+}
+
+.bank-container h1 {
+    text-align: center;
+    color: #ffd700;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.bank-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.bank-btn {
+    padding: 15px;
+    background: #00aa00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.bank-btn:hover {
+    background: #00ff00;
+    transform: scale(1.05);
+}
+
+.bank-btn.close-btn {
+    background: #cc0000;
+    grid-column: 1 / -1;
+}
+
+.bank-btn.close-btn:hover {
+    background: #ff0000;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    border: 3px solid #ffd700;
+    border-radius: 10px;
+    padding: 40px;
+    z-index: 1001;
+    width: 300px;
+}
+
+.modal-content h2 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    background: #00aa00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.modal-content button:last-child {
+    background: #cc0000;
+}

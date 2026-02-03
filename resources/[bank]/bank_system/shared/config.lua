@@ -1,0 +1,30 @@
+-- Banka Konfigürasyonu
+BankConfig = {
+    locations = {
+        {
+            name = "Merkez Banka",
+            x = 151.0,
+            y = -883.0,
+            z = 24.4,
+            heading = 340.0,
+            distance = 5.0
+        },
+        {
+            name = "İtfaiye Banka",
+            x = 228.14,
+            y = -903.57,
+            z = 24.39,
+            heading = 340.0,
+            distance = 5.0
+        }
+    },
+    
+    atms = {
+        {x = 149.0, y = -890.0, z = 24.4},
+        {x = 230.0, y = -900.0, z = 24.4},
+        {x = 314.3, y = -279.0, z = 44.9},
+        {x = 1165.0, y = -324.5, z = 69.2}
+    },
+    
+    transferFee = 0
+}

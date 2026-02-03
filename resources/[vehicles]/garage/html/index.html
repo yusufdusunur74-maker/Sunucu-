@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Araç Garajı</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="garage-menu" class="garage-container" style="display: none;">
+        <div class="garage-header">
+            <h1>🏎️ ARAÇ GARAJı</h1>
+            <button class="close-btn" onclick="closeGarage()">✕</button>
+        </div>
+
+        <div class="garage-content">
+            <div class="categories-panel">
+                <h3>KATEGORİLER</h3>
+                <div id="categories" class="categories-list"></div>
+            </div>
+
+            <div class="vehicles-panel">
+                <h3>ARAÇLAR</h3>
+                <div id="vehicles" class="vehicles-grid"></div>
+            </div>
+
+            <div class="vehicle-info-panel">
+                <h3>ARAÇ BİLGİSİ</h3>
+                <div id="vehicleInfo" class="info">
+                    <p>Araç seçin</p>
+                </div>
+                <button id="buyBtn" class="buy-btn" style="display:none;">SATINAL AL</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
