@@ -25,6 +25,34 @@
                     <span class="icon">💬</span>
                     <span>Mesajlar</span>
                 </div>
+                <div class="menu-item" onclick="showPage('social')">
+                    <span class="icon">🐦</span>
+                    <span>Haber Kaynağı</span>
+                </div>
+                <div class="menu-item" onclick="showPage('market')">
+                    <span class="icon">🛒</span>
+                    <span>Sahibinden</span>
+                </div>
+                <div class="menu-item" onclick="showPage('share')">
+                    <span class="icon">📍</span>
+                    <span>Konum Gönder</span>
+                </div>
+
+            <!-- Sahibinden Sayfası -->
+            <div id="market-page" class="phone-content hidden">
+                <div class="page-header">
+                    <button onclick="showPage('menu')">←</button>
+                    <span>Sahibinden</span>
+                    <button onclick="closePhone()">X</button>
+                </div>
+                <div class="create-listing">
+                    <input id="listing-title" type="text" placeholder="Başlık">
+                    <input id="listing-price" type="number" placeholder="Fiyat">
+                    <textarea id="listing-desc" placeholder="Açıklama"></textarea>
+                    <button onclick="createListing()">İlan Ver</button>
+                </div>
+                <div id="listings" class="listings"></div>
+            </div>
                 <div class="menu-item" onclick="showPage('account')">
                     <span class="icon">💰</span>
                     <span>Hesap</span>
@@ -32,6 +60,33 @@
                 <div class="menu-item" onclick="showPage('calls')">
                     <span class="icon">☎️</span>
                     <span>Aramalar</span>
+                </div>
+            </div>
+
+            <!-- Sosyal Sayfası -->
+            <div id="social-page" class="phone-content hidden">
+                <div class="page-header">
+                    <button onclick="showPage('menu')">←</button>
+                    <span>Haber Kaynağı</span>
+                    <button onclick="closePhone()">X</button>
+                </div>
+                <div class="tweet-form">
+                    <textarea id="tweet-text" placeholder="Ne oluyor?"></textarea>
+                    <button onclick="postTweet()">Tweetle</button>
+                </div>
+                <div id="feed-list" class="feed-list"></div>
+            </div>
+            
+            <!-- Konum Gönder Sayfası -->
+            <div id="share-page" class="phone-content hidden">
+                <div class="page-header">
+                    <button onclick="showPage('menu')">←</button>
+                    <span>Konum Gönder</span>
+                    <button onclick="closePhone()">X</button>
+                </div>
+                <div class="share-form">
+                    <input id="share-number" type="text" placeholder="Numara">
+                    <button onclick="shareLocation()">Gönder</button>
                 </div>
             </div>
             
