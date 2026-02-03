@@ -6,7 +6,22 @@ window.addEventListener('message', function(event){
     container.innerHTML = '';
     list.forEach((c, i) =>{
       const el = document.createElement('div');
-      el.innerHTML = `<b>${c.name || ('Karakter '+(i+1))}</b> <button onclick="select(${i})">Seç</button>`;
+      el.style.display = 'flex';
+      el.style.justifyContent = 'space-between';
+      el.style.alignItems = 'center';
+      el.style.padding = '6px';
+      el.style.border = '1px solid #ddd';
+      el.innerHTML = `
+        <div>
+          <b>${c.name || ('Karakter '+(i+1))}</b><br>
+          <small>Yüz: ${c.face || '-'} • Saç: ${c.hair || '-'} • Kilo: ${c.weight || '-'}</small>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button onclick="select(${i})">Seç</button>
+          <button onclick="renamePrompt(${i})">Yeniden Adlandır</button>
+          <button onclick="deleteChar(${i})">Sil</button>
+        </div>
+      `;
       container.appendChild(el);
     });
   }
@@ -46,4 +61,24 @@ function previewChar(){
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   });
+}
+
+function deleteChar(index){
+  if(!confirm('Karakteri silmek istediğinize emin misiniz?')) return;
+  fetch(`https://${GetParentResourceName()}/deleteCharacter`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({index: index})
+  });
+}
+
+function renamePrompt(index){
+  const newName = prompt('Yeni isim:');
+  if(newName && newName.trim().length > 0){
+    fetch(`https://${GetParentResourceName()}/renameCharacter`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({index: index, name: newName.trim()})
+    });
+  }
 }

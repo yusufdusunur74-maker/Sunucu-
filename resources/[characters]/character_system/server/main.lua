@@ -79,6 +79,38 @@ AddEventHandler('character:select', function(index)
   end
 end)
 
+-- Karakter sil
+RegisterNetEvent('character:delete')
+AddEventHandler('character:delete', function(index)
+  local src = source
+  local identifier = GetPlayerIdentifiers(src)[1]
+  local list = characters[identifier] or {}
+  index = tonumber(index)
+  if index and list[index] then
+    table.remove(list, index)
+    characters[identifier] = list
+    saveToDisk()
+    TriggerClientEvent('character:sendList', src, list)
+    print(('[Character] Oyuncu %s karakter %d sildi'):format(identifier, index))
+  end
+end)
+
+-- Karakter yeniden adlandır
+RegisterNetEvent('character:rename')
+AddEventHandler('character:rename', function(index, newName)
+  local src = source
+  local identifier = GetPlayerIdentifiers(src)[1]
+  local list = characters[identifier] or {}
+  index = tonumber(index)
+  if index and list[index] and newName and type(newName) == 'string' then
+    list[index].name = tostring(newName)
+    characters[identifier] = list
+    saveToDisk()
+    TriggerClientEvent('character:sendList', src, list)
+    print(('[Character] Oyuncu %s karakter %d adını %s yaptı'):format(identifier, index, newName))
+  end
+end)
+
 -- Oyuncu ayrıldığında veri kaydet
 AddEventHandler('playerDropped', function()
   saveToDisk()
