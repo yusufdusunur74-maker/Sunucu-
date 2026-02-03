@@ -8,6 +8,23 @@ local function saveVehicles()
     if f then f:write(encoded); f:close() end
 end
 
+-- Impound helper: mark vehicle as impounded
+RegisterNetEvent('garage:impoundVehicle')
+AddEventHandler('garage:impoundVehicle', function(plate, fine)
+    -- Find owner and mark
+    for identifier,data in pairs(Vehicles) do
+        for i, v in ipairs(data.vehicles) do
+            if v.plate == plate then
+                v.impounded = true
+                v.impoundFine = fine or 1000
+                saveVehicles()
+                print(("^3[GARAJ]^7 Araç %s (%s) impound edildi, ceza $%s"):format(v.name, plate, tostring(v.impoundFine)))
+                return
+            end
+        end
+    end
+end)
+
 local function loadVehicles()
     local f = io.open(vehiclesFile, 'r')
     if f then
@@ -66,10 +83,13 @@ AddEventHandler('garage:spawnVehicle', function(plate, index)
     Vehicles[id] = Vehicles[id] or { vehicles = {} }
 
     if index and Vehicles[id].vehicles[index] then
-        Vehicles[id].vehicles[index].stored = false
-        local vehiclePlate = Vehicles[id].vehicles[index].plate
+        local v = Vehicles[id].vehicles[index]
+        v.stored = false
+        local vehiclePlate = v.plate
         saveVehicles()
-        TriggerClientEvent('garage:spawnCar', src, vehiclePlate)
+        TriggerClientEvent('garage:spawnCar', src, vehiclePlate, v.model)
+        -- send fuel & damage state to client
+        TriggerClientEvent('fuel:applyState', src, vehiclePlate, v.fuel, v.damage)
         TriggerClientEvent('chat:addMessage', src, {
             args = {'GARAJ', '✅ Araç çıkartıldı'}
         })

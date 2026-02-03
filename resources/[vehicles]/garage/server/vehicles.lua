@@ -42,7 +42,7 @@ AddEventHandler('garage:buyVehicle', function(vehicleId)
 
     Vehicles[identifier] = Vehicles[identifier] or { vehicles = {} }
     local plate = "UNIV" .. math.random(1000,9999)
-    table.insert(Vehicles[identifier].vehicles, { model = vehicle.model, name = vehicle.name, plate = plate, stored = false })
+    table.insert(Vehicles[identifier].vehicles, { model = vehicle.model, name = vehicle.name, plate = plate, stored = false, fuel = 100, damage = { engine = 100, body = 100 }, rental = false, impounded = false })
     saveVehicles()
 
     -- kayıt et, kilit sistemi bilsin
