@@ -140,6 +140,28 @@ AddEventHandler('money:log', function(src, source_type, action, amount, balance)
     ))
 end)
 
+-- Zorla banka kredisi (server tarafından başka modüller için)
+RegisterNetEvent('money:forceAddBank')
+AddEventHandler('money:forceAddBank', function(targetSrc, amount)
+    if not targetSrc or not Players[targetSrc] then return end
+    amount = tonumber(amount) or 0
+    if amount <= 0 then return end
+    Players[targetSrc].bank = Players[targetSrc].bank + amount
+    TriggerClientEvent('money:updateMoney', targetSrc, Players[targetSrc].cash, Players[targetSrc].bank)
+    TriggerEvent('money:log', targetSrc, 'BANK', 'Force add bank', amount, Players[targetSrc].bank)
+end)
+
+-- Zorla nakit kredisi
+RegisterNetEvent('money:forceAddCash')
+AddEventHandler('money:forceAddCash', function(targetSrc, amount)
+    if not targetSrc or not Players[targetSrc] then return end
+    amount = tonumber(amount) or 0
+    if amount <= 0 then return end
+    Players[targetSrc].cash = Players[targetSrc].cash + amount
+    TriggerClientEvent('money:updateMoney', targetSrc, Players[targetSrc].cash, Players[targetSrc].bank)
+    TriggerEvent('money:log', targetSrc, 'CASH', 'Force add cash', amount, Players[targetSrc].cash)
+end)
+
 -- Oyuncu Ayrılmıştır
 AddEventHandler('playerDropped', function()
     local src = source

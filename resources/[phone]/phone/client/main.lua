@@ -107,6 +107,16 @@ AddEventHandler('marketplace:updateListings', function(listings)
     SendNuiMessage(json.encode({ type = 'updateMarket', listings = listings }))
 end)
 
+RegisterNetEvent('bank:showTransactions')
+AddEventHandler('bank:showTransactions', function(transactions)
+    SendNuiMessage(json.encode({ type = 'updateTransactions', transactions = transactions }))
+end)
+
+RegisterNetEvent('bank:showBills')
+AddEventHandler('bank:showBills', function(bills)
+    SendNuiMessage(json.encode({ type = 'updateBills', bills = bills }))
+end)
+
 -- NUI Callback
 RegisterNuiCallback('phoneAction', function(data, cb)
     if data.action == "close" then
@@ -141,6 +151,12 @@ RegisterNuiCallback('phoneAction', function(data, cb)
         TriggerServerEvent('marketplace:removeListing', data.id)
     elseif data.action == 'promoteListing' then
         TriggerServerEvent('marketplace:promoteListing', data.id, data.fee)
+    elseif data.action == 'getTransactions' then
+        TriggerServerEvent('bank:getTransactions')
+    elseif data.action == 'getBills' then
+        TriggerServerEvent('bank:getBills')
+    elseif data.action == 'payBill' then
+        TriggerServerEvent('bank:payBill', data.id)
     end
     cb('ok')
 end)

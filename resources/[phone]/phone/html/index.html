@@ -33,6 +33,14 @@
                     <span class="icon">🛒</span>
                     <span>Sahibinden</span>
                 </div>
+                <div class="menu-item" onclick="showPage('transactions')">
+                    <span class="icon">📜</span>
+                    <span>İşlem Geçmişi</span>
+                </div>
+                <div class="menu-item" onclick="showPage('bills')">
+                    <span class="icon">📑</span>
+                    <span>Faturalar</span>
+                </div>
                 <div class="menu-item" onclick="showPage('share')">
                     <span class="icon">📍</span>
                     <span>Konum Gönder</span>
@@ -52,6 +60,26 @@
                     <button onclick="createListing()">İlan Ver</button>
                 </div>
                 <div id="listings" class="listings"></div>
+            </div>
+
+            <!-- İşlem Geçmişi -->
+            <div id="transactions-page" class="phone-content hidden">
+                <div class="page-header">
+                    <button onclick="showPage('menu')">←</button>
+                    <span>İşlem Geçmişi</span>
+                    <button onclick="closePhone()">X</button>
+                </div>
+                <div id="transactions-list" class="transactions-list"></div>
+            </div>
+
+            <!-- Faturalar -->
+            <div id="bills-page" class="phone-content hidden">
+                <div class="page-header">
+                    <button onclick="showPage('menu')">←</button>
+                    <span>Faturalar</span>
+                    <button onclick="closePhone()">X</button>
+                </div>
+                <div id="bills-list" class="bills-list"></div>
             </div>
                 <div class="menu-item" onclick="showPage('account')">
                     <span class="icon">💰</span>

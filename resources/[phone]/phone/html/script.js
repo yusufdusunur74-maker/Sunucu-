@@ -56,6 +56,18 @@ window.addEventListener('message', function(event) {
         return;
     }
 
+    if (item.type === 'updateTransactions') {
+        phoneData.transactions = item.transactions || [];
+        if (currentPage === 'transactions') updateTransactions();
+        return;
+    }
+
+    if (item.type === 'updateBills') {
+        phoneData.bills = item.bills || [];
+        if (currentPage === 'bills') updateBills();
+        return;
+    }
+
     if (item.type === 'receiveLocation') {
         alert(`📍 Konum gönderildi: ${item.from} -> (${item.coords.x.toFixed(2)}, ${item.coords.y.toFixed(2)})`);
         return;
@@ -99,6 +111,71 @@ function showPage(page) {
         });
         updateMarket();
     }
+
+    if (page === 'transactions') {
+        fetch(`https://${GetParentResourceName()}/phoneAction`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'getTransactions' })
+        });
+        updateTransactions();
+    }
+
+    if (page === 'bills') {
+        fetch(`https://${GetParentResourceName()}/phoneAction`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'getBills' })
+        });
+        updateBills();
+    }
+}
+
+function updateTransactions() {
+    let html = '';
+    if (phoneData.transactions && phoneData.transactions.length > 0) {
+        phoneData.transactions.forEach(t => {
+            html += `
+                <div class="tx">
+                    <div class="tx-type">${t.type}</div>
+                    <div class="tx-amount">$${t.amount}</div>
+                    <div class="tx-meta">${t.iban_to or ''}</div>
+                    <div class="tx-time">${t.timestamp ? new Date(t.timestamp*1000).toLocaleString() : ''}</div>
+                </div>
+            `;
+        });
+    } else {
+        html = '<p style="text-align:center;color:#999;">İşlem geçmişi boş</p>';
+    }
+    document.getElementById('transactions-list').innerHTML = html;
+}
+
+function updateBills() {
+    let html = '';
+    if (phoneData.bills && phoneData.bills.length > 0) {
+        phoneData.bills.forEach(b => {
+            html += `
+                <div class="bill">
+                    <div class="bill-desc">${b.description}</div>
+                    <div class="bill-amount">$${b.amount}</div>
+                    <div class="bill-meta">Durum: ${b.paid ? 'Ödendi' : 'Ödenmedi'} | ID: ${b.id}</div>
+                    <div class="bill-actions">${b.paid ? '' : `<button onclick="payBill(${b.id})">Öde</button>`}</div>
+                </div>
+            `;
+        });
+    } else {
+        html = '<p style="text-align:center;color:#999;">Faturanız yok</p>';
+    }
+    document.getElementById('bills-list').innerHTML = html;
+}
+
+function payBill(id) {
+    if (!confirm('Faturayı ödemek istiyor musunuz?')) return;
+    fetch(`https://${GetParentResourceName()}/phoneAction`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'payBill', id: id })
+    });
 }
 
 function createListing() {
