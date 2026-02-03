@@ -19,7 +19,7 @@ local function GetClosestPlayer()
     return closestPlayer, closestDistance
 end
 
-RegisterCommand('lock', function()
+RegisterCommand('kilit', function()
     local ped = PlayerPedId()
     local vehicle = GetVehiclePedIsIn(ped, false)
     
@@ -36,8 +36,8 @@ AddEventHandler('locks:updateLock', function(plate, isLocked)
     print(("Araç %s - %s"):format(plate, isLocked and "Kilitli" or "Açık"))
 end)
 
--- Give key to closest player (or use arg server id/plate)
-RegisterCommand('givekey', function(source, args)
+-- Anahtar verme (yakın oyuncuya) veya arg ile server id/plaka kullan
+RegisterCommand('anahtarver', function(source, args)
     local ped = PlayerPedId()
     local plate = args[1]
     if not plate then
@@ -52,8 +52,8 @@ RegisterCommand('givekey', function(source, args)
     TriggerServerEvent('vehicle:giveKeyToPlayer', plate, closest)
 end)
 
--- Remove key from closest player
-RegisterCommand('removekey', function(source, args)
+-- Anahtar kaldırma (yakın oyuncudan)
+RegisterCommand('anahtarkaldir', function(source, args)
     local ped = PlayerPedId()
     local plate = args[1]
     if not plate then
@@ -68,8 +68,8 @@ RegisterCommand('removekey', function(source, args)
     TriggerServerEvent('vehicle:removeKeyFromPlayer', plate, closest)
 end)
 
--- Query keys for a plate
-RegisterCommand('keys', function(source, args)
+-- Plakaya ait anahtar bilgilerini sorgula
+RegisterCommand('anahtarlar', function(source, args)
     local ped = PlayerPedId()
     local plate = args[1]
     if not plate then
@@ -93,8 +93,8 @@ AddEventHandler('vehicle:keysInfo', function(plate, info)
     end
 end)
 
--- Araç Binme Animasyonu
-RegisterCommand('enter', function()
+-- Araç binme animasyonu (Türkçe komut: /bin)
+RegisterCommand('bin', function()
     local ped = PlayerPedId()
     
     -- Araç binme animasyonu
