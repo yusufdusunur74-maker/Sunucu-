@@ -57,6 +57,8 @@ AddEventHandler('character:create', function(data)
   local identifier = GetPlayerIdentifiers(src)[1]
   characters[identifier] = characters[identifier] or {}
   if #characters[identifier] < (CharacterConfig and CharacterConfig.maxCharacters or 4) then
+    -- ensure fingerprint exists
+    data.fingerprint = data.fingerprint or tostring(math.random(100000,999999))
     table.insert(characters[identifier], data)
     saveToDisk()
     TriggerClientEvent('character:sendList', src, characters[identifier])
@@ -66,6 +68,9 @@ AddEventHandler('character:create', function(data)
   end
 end)
 
+-- Active characters map (source -> active character info)
+local PlayersActive = {}
+
 -- Karakter seç
 RegisterNetEvent('character:select')
 AddEventHandler('character:select', function(index)
@@ -74,9 +79,44 @@ AddEventHandler('character:select', function(index)
   local list = characters[identifier] or {}
   local char = list[index]
   if char then
+    -- set active on server side
+    PlayersActive[src] = {
+      identifier = identifier,
+      index = index,
+      name = char.name or 'unknown',
+      fingerprint = char.fingerprint
+    }
+
     TriggerClientEvent('character:load', src, char)
     print(('[Character] Oyuncu %s karakter %d seçti'):format(identifier, index))
   end
+end)
+
+-- Allow server queries for active character
+RegisterNetEvent('character:getActive')
+AddEventHandler('character:getActive', function()
+  local src = source
+  TriggerClientEvent('character:activeInfo', src, PlayersActive[src])
+end)
+
+-- Query fingerprint info for a target player src (callback style)
+RegisterNetEvent('character:queryFingerprint')
+AddEventHandler('character:queryFingerprint', function(targetSrc, cb)
+  local info = nil
+  if targetSrc and PlayersActive[targetSrc] then
+    info = {
+      name = PlayersActive[targetSrc].name,
+      fingerprint = PlayersActive[targetSrc].fingerprint,
+      identifier = PlayersActive[targetSrc].identifier
+    }
+  end
+  if cb then cb(info) end
+end)
+
+-- Cleanup on drop
+AddEventHandler('playerDropped', function()
+  local src = source
+  PlayersActive[src] = nil
 end)
 
 -- Karakter sil

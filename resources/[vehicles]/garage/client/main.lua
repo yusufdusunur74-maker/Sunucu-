@@ -81,10 +81,10 @@ end)
 
 -- Araç Spawn
 RegisterNetEvent('garage:spawnCar')
-AddEventHandler('garage:spawnCar', function(plate)
+AddEventHandler('garage:spawnCar', function(plate, modelName)
     local playerPed = PlayerPedId()
     local coords = GetEntityCoords(playerPed)
-    local modelName = "adder"  -- Varsayılan
+    local modelName = modelName or "adder"  -- Varsayılan
     
     local model = GetHashKey(modelName)
     RequestModel(model)
@@ -94,12 +94,13 @@ AddEventHandler('garage:spawnCar', function(plate)
     end
     
     local vehicle = CreateVehicle(model, coords.x + 5, coords.y, coords.z, 0.0, true, false)
+    SetVehicleNumberPlateText(vehicle, plate)
     SmashVehicleWindow(vehicle, 0)
     SmashVehicleWindow(vehicle, 1)
     SetVehicleEngineHealth(vehicle, 1000.0)
     SetVehicleDeformationFixed(vehicle)
     
-    print(("^3[GARAJ]^7 Araç spawn edildi: %s"):format(modelName))
+    print(("^3[GARAJ]^7 Araç spawn edildi: %s (%s)"):format(modelName, plate))
 end)
 
 print("^3[GARAJ]^7 Client başlatıldı - Komut: /garaj")
