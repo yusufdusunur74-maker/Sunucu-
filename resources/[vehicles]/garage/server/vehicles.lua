@@ -1,10 +1,29 @@
 -- Araç Galerisi Server Script
-local PlayerVehicles = {}
+local Vehicles = {}
+local vehiclesFile = "resources/[vehicles]/garage/data/vehicles.json"
+
+local function saveVehicles()
+    local encoded = json and json.encode(Vehicles) or '{}'
+    local f = io.open(vehiclesFile, 'w')
+    if f then f:write(encoded); f:close() end
+end
+
+local function loadVehicles()
+    local f = io.open(vehiclesFile, 'r')
+    if f then
+        local content = f:read('*a'); f:close()
+        local ok, decoded = pcall(function() return json.decode(content) end)
+        if ok and decoded then Vehicles = decoded end
+    else Vehicles = {} end
+end
+
+loadVehicles()
 
 -- Araç Satın Alma
 RegisterNetEvent('garage:buyVehicle')
 AddEventHandler('garage:buyVehicle', function(vehicleId)
     local src = source
+    local identifier = GetPlayerIdentifiers(src)[1]
     local vehicle = nil
     
     -- Araç kaydını bul
@@ -17,28 +36,22 @@ AddEventHandler('garage:buyVehicle', function(vehicleId)
     
     if not vehicle then return end
     
-    -- Oyuncu parasını kontrol et
-    if PlayerVehicles[src] == nil then
-        PlayerVehicles[src] = {vehicles = {}}
-    end
-    
     -- Para kontrolü yapıl
     TriggerEvent('money:getMoney')
     Wait(100)
-    
-    print(("^2[Garaj]^7 | Oyuncu %d, %s aracını $%d fiyatına satın aldı"):format(
-        src, vehicle.name, vehicle.price
-    ))
-    
-    -- Araç veritabanına kaydet
-    table.insert(PlayerVehicles[src].vehicles, {
-        model = vehicle.model,
-        name = vehicle.name,
-        plate = "UNIV" .. math.random(1000, 9999)
-    })
-    
+
+    Vehicles[identifier] = Vehicles[identifier] or { vehicles = {} }
+    local plate = "UNIV" .. math.random(1000,9999)
+    table.insert(Vehicles[identifier].vehicles, { model = vehicle.model, name = vehicle.name, plate = plate, stored = false })
+    saveVehicles()
+
+    -- kayıt et, kilit sistemi bilsin
+    TriggerEvent('vehicle:registerOwnership', plate)
+
     TriggerClientEvent('garage:notification', src, "Başarılı", vehicle.name .. " satın aldınız! ($" .. vehicle.price .. ")")
     TriggerEvent('money:add', -vehicle.price, "GARAJ")
+
+    print(("^2[Garaj]^7 | Oyuncu %d, %s aracını $%d fiyatına satın aldı (plate: %s)"):format(src, vehicle.name, vehicle.price, plate))
 end)
 
 -- Araç Getir
@@ -53,14 +66,7 @@ end)
 RegisterNetEvent('garage:getVehicles')
 AddEventHandler('garage:getVehicles', function()
     local src = source
-    if PlayerVehicles[src] == nil then
-        PlayerVehicles[src] = {vehicles = {}}
-    end
-    TriggerClientEvent('garage:updateVehicleList', src, PlayerVehicles[src].vehicles)
-end)
-
--- Oyuncu Çıktı
-AddEventHandler('playerDropped', function()
-    local src = source
-    PlayerVehicles[src] = nil
+    local identifier = GetPlayerIdentifiers(src)[1]
+    Vehicles[identifier] = Vehicles[identifier] or { vehicles = {} }
+    TriggerClientEvent('garage:updateVehicleList', src, Vehicles[identifier].vehicles)
 end)
