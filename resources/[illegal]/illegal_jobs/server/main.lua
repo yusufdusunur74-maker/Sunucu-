@@ -1,69 +1,69 @@
 -- İllegal Meslekler Server
-print("^1[İllegal Meslekler]^7 Yüklendi")
+local cfg = IllegalConfig or {}
 
 -- Uyuşturucu Üretimi
 RegisterNetEvent('illegal:produceCocaine')
 AddEventHandler('illegal:produceCocaine', function()
     local src = source
+    local drugCfg = cfg.drug_production or {police_risk = 30, profit_per_unit = 500}
     
-    -- Random başarısızlık şansı (Polis tarafından yakalanma riski)
-    if math.random(1, 100) <= 30 then
+    if math.random(1, 100) <= drugCfg.police_risk then
         TriggerClientEvent('chat:addMessage', src, {
-            color = {255, 0, 0},
-            args = {"POLİS", "Uyuşturucu operasyonunda yakalandınız!"}
+            args = {'POLİS', '⚠️ Uyuşturucu operasyonunda yakalandınız!'}
         })
-        print(("^1[İllegal]^7 Oyuncu %d uyuşturucuda yakalandı"):format(src))
+        print(("^1[İLLEGAL]^7 Oyuncu %d uyuşturucuda yakalandı"):format(src))
         return
     end
     
-    local amount = math.random(5000, 15000)
-    TriggerEvent('money:add', amount, "UYUŞTURUCU")
+    local amount = drugCfg.profit_per_unit * math.random(5, 10)
+    TriggerEvent('money:add', amount, 'UYUŞTURUCU')
     
     TriggerClientEvent('chat:addMessage', src, {
-        color = {0, 255, 0},
-        args = {"UYUŞTURUCU", "Ürün satıldı! +$" .. amount}
+        args = {'UYUŞTURUCU', '✅ Ürün satıldı! +$' .. amount}
     })
     
-    print(("^1[Uyuşturucu]^7 Oyuncu %d $%s kazandı"):format(src, amount))
+    print(("^1[UYUŞTURUCU]^7 Oyuncu %d $%s kazandı"):format(src, amount))
 end)
 
 -- Soygun
 RegisterNetEvent('illegal:robbery')
 AddEventHandler('illegal:robbery', function()
     local src = source
+    local robberyCfg = cfg.robbery or {police_risk = 40, min_reward = 3000, max_reward = 10000}
     
-    -- Yakalanma riski
-    if math.random(1, 100) <= 40 then
+    if math.random(1, 100) <= robberyCfg.police_risk then
         TriggerClientEvent('chat:addMessage', src, {
-            color = {255, 0, 0},
-            args = {"POLİS", "Soygun sırasında yakalandınız!"}
+            args = {'POLİS', '⚠️ Soygun sırasında yakalandınız!'}
         })
-        print(("^1[Soygun]^7 Oyuncu %d yakalandı"):format(src))
+        print(("^1[SOYGUN]^7 Oyuncu %d yakalandı"):format(src))
         return
     end
     
-    local amount = math.random(3000, 10000)
-    TriggerEvent('money:add', amount, "SOYGUN")
+    local amount = math.random(robberyCfg.min_reward, robberyCfg.max_reward)
+    TriggerEvent('money:add', amount, 'SOYGUN')
     
     TriggerClientEvent('chat:addMessage', src, {
-        color = {0, 255, 0},
-        args = {"SOYGUN", "Başarılı soygun! +$" .. amount}
+        args = {'SOYGUN', '✅ Başarılı soygun! +$' .. amount}
     })
     
-    print(("^1[Soygun]^7 Oyuncu %d $%s çaldı"):format(src, amount))
+    print(("^1[SOYGUN]^7 Oyuncu %d $%s çaldı"):format(src, amount))
 end)
 
--- Kaçak İn
-RegisterNetEvent('illegal:mining')
-AddEventHandler('illegal:mining', function()
+-- Silah Satışı
+RegisterNetEvent('illegal:buyWeapon')
+AddEventHandler('illegal:buyWeapon', function(weaponIndex)
     local src = source
-    local ore = math.random(100, 500)
+    weaponIndex = tonumber(weaponIndex) or 1
+    local weapon = (cfg.weapons or {})[weaponIndex]
     
-    TriggerEvent('inventory:addItem', "Altın Cevheri", ore)
+    if not weapon then return end
+    
+    TriggerClientEvent('illegal:receiveWeapon', src, weapon)
     TriggerClientEvent('chat:addMessage', src, {
-        color = {0, 255, 0},
-        args = {"MADENCİLİK", "Çıkardı: " .. ore .. " gram altın"}
+        args = {'⚠️ SİLAH', weapon.name .. ' silahı alındı ($' .. weapon.price .. ')'}
     })
     
-    print(("^1[Madencilik]^7 Oyuncu %d %d gram çıkardı"):format(src, ore))
+    print(("^1[UYUŞTURUCU]^7 Oyuncu %d %s satın aldı"):format(src, weapon.name))
 end)
+
+print("^1[İLLEGAL]^7 Sunucu başlatıldı")
