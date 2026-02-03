@@ -33,7 +33,31 @@ end)
 
 RegisterNetEvent('locks:updateLock')
 AddEventHandler('locks:updateLock', function(plate, isLocked)
+    -- Efekt / ses
+    if isLocked then
+        PlaySoundFrontend(-1, "Lock", "DLC_HEISTS_GENERAL_FRONTEND_SOUNDS", 0)
+    else
+        PlaySoundFrontend(-1, "Unlock", "DLC_HEISTS_GENERAL_FRONTEND_SOUNDS", 0)
+    end
     print(("Araç %s - %s"):format(plate, isLocked and "Kilitli" or "Açık"))
+end)
+
+-- Alarm çalma (sunucu tetikliyor)
+RegisterNetEvent('locks:playAlarm')
+AddEventHandler('locks:playAlarm', function(plate)
+    local ped = PlayerPedId()
+    local veh = GetVehiclePedIsIn(ped, false)
+    -- Eğer oyuncu aynı araçtaysa aracın alarmını başlat
+    if veh ~= 0 then
+        local myPlate = GetVehicleNumberPlateText(veh)
+        if myPlate == plate then
+            SetVehicleAlarm(veh, true)
+            StartVehicleAlarm(veh)
+        end
+    end
+    -- Evrensel uyarı sesi
+    PlaySoundFrontend(-1, "HACKING_FAIL", "DLC_HEISTS_GENERAL_FRONTEND_SOUNDS", 0)
+    TriggerEvent('chat:addMessage', { color={255, 0, 0}, args={"ALARM","Araç alarmı tetiklendi: "..plate}})
 end)
 
 -- Anahtar verme (yakın oyuncuya) veya arg ile server id/plaka kullan

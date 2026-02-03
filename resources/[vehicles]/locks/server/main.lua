@@ -68,6 +68,8 @@ AddEventHandler('locks:toggleLock', function(plate)
     local identifier = GetPlayerIdentifiers(src)[1]
     if not hasKey(identifier, plate) then
         TriggerClientEvent('chat:addMessage', src, { color={255,0,0}, args={"KILIT","Bu aracı kilitleme/açma yetkiniz yok"}})
+        -- Bildir: yetkisiz deneme alarm tetikleyebilir
+        TriggerEvent('locks:triggerAlarm', plate, src)
         return
     end
     LockedVehicles[plate] = not LockedVehicles[plate]
@@ -169,6 +171,28 @@ AddEventHandler('vehicle:getKeyInfo', function(plate)
         end
     end
     TriggerClientEvent('vehicle:keysInfo', src, plate, info)
+end)
+
+-- Alarm tetikleyici: sahip ve yakındaki oyunculara bildir
+RegisterNetEvent('locks:triggerAlarm')
+AddEventHandler('locks:triggerAlarm', function(plate, sourceAttempt)
+    -- notify owner if present
+    if Keys[plate] and Keys[plate].owner then
+        local ownerIdentifier = Keys[plate].owner
+        -- attempt to find server id(s) with identifier
+        for _, pid in ipairs(GetPlayers()) do
+            local ids = GetPlayerIdentifiers(pid)
+            if ids and ids[1] == ownerIdentifier then
+                TriggerClientEvent('chat:addMessage', pid, { color={255,0,0}, args={"ALARM","Aracınızda yetkisiz kilitleme denemesi: "..plate}})
+            end
+        end
+    end
+
+    -- broadcast alarm sound / client handler
+    for _, pid in ipairs(GetPlayers()) do
+        TriggerClientEvent('locks:playAlarm', pid, plate)
+    end
+    print(("^1[ALARM]^7 Yetkisiz deneme: %s (kaynak: %s)"):format(plate, tostring(sourceAttempt)))
 end)
 
 print("^2[Araç Kilit Sistemi]^7 Yüklendi")
