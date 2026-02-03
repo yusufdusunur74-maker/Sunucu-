@@ -47,6 +47,59 @@ AddEventHandler('ems:revivePlayer', function(targetId)
     print(("^5[EMS]^7 %d oyuncu %d oyuncuyu dirilttti"):format(src, targetId))
 end)
 
+-- Carry / stretcher system (simplified)
+RegisterNetEvent('ems:carry')
+AddEventHandler('ems:carry', function(targetId)
+    local src = source
+    targetId = tonumber(targetId)
+    if not OnDuty[src] then
+        TriggerClientEvent('chat:addMessage', src, { args = {'EMS', 'Nöbete başlamalısınız'} })
+        return
+    end
+    if not targetId then return end
+    TriggerClientEvent('ems:beCarried', targetId, src)
+    TriggerClientEvent('ems:carryStarted', src, targetId)
+    TriggerClientEvent('chat:addMessage', src, { args = {'EMS', 'Hasta sedyeye alındı.'} })
+end)
+
+RegisterNetEvent('ems:drop')
+AddEventHandler('ems:drop', function(targetId)
+    local src = source
+    targetId = tonumber(targetId)
+    if not OnDuty[src] then
+        TriggerClientEvent('chat:addMessage', src, { args = {'EMS', 'Nöbete başlamalısınız'} })
+        return
+    end
+    TriggerClientEvent('ems:stopCarry', targetId)
+    TriggerClientEvent('ems:carryStopped', src, targetId)
+    TriggerClientEvent('chat:addMessage', src, { args = {'EMS', 'Sedye bırakıldı.'} })
+end)
+
+-- Treatment and billing
+RegisterNetEvent('ems:treat')
+AddEventHandler('ems:treat', function(targetId, amount)
+    local src = source
+    targetId = tonumber(targetId)
+    amount = tonumber(amount) or 100
+    if not OnDuty[src] then
+        TriggerClientEvent('chat:addMessage', src, { args = {'EMS', 'Nöbete başlamalısınız'} })
+        return
+    end
+    if not targetId then return end
+
+    -- charge target's bank
+    TriggerEvent('money:removeBank', amount, function(success)
+        if success then
+            -- pay EMS
+            TriggerEvent('money:forceAddBank', src, amount)
+            TriggerClientEvent('ems:receiveTreatment', targetId, amount)
+            TriggerClientEvent('chat:addMessage', src, { args = {'EMS', ('Tedavi uygulandı. $%d alındı.'):format(amount)} })
+        else
+            TriggerClientEvent('chat:addMessage', src, { args = {'EMS', 'Hastanın bakiyesi yetersiz.'} })
+        end
+    end)
+end)
+
 AddEventHandler('playerDropped', function()
     local src = source
     OnDuty[src] = nil
